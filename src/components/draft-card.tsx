@@ -26,7 +26,7 @@ export function DraftCard({
   }
 
   return (
-    <div className="w-full flex-shrink-0 px-4" style={{ perspective: 1000 }}>
+    <div className="w-full" style={{ perspective: 1000 }}>
       <motion.div
         className="relative w-full"
         style={{ transformStyle: "preserve-3d" }}
@@ -41,7 +41,7 @@ export function DraftCard({
           <h3 className="text-accent text-sm font-medium tracking-widest uppercase mb-4">
             Draft {label}
           </h3>
-          <div className="flex-1 overflow-y-auto max-h-[50vh] mb-4">
+          <div className="overflow-y-auto max-h-[60vh] mb-4 overscroll-contain">
             <p className="font-serif text-foreground leading-relaxed whitespace-pre-wrap">
               {text || (
                 <span className="text-muted italic">Waiting for words...</span>
@@ -51,7 +51,7 @@ export function DraftCard({
           {!isRevealed && text && (
             <button
               onClick={handleSelect}
-              className="w-full bg-accent/10 hover:bg-accent/20 text-accent border border-accent/20 transition-colors font-medium py-3 rounded-xl text-sm"
+              className="w-full bg-accent/10 hover:bg-accent/20 text-accent border border-accent/20 transition-colors font-medium py-3 rounded-xl text-sm flex-shrink-0"
             >
               Choose this draft
             </button>

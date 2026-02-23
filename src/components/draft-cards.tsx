@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useSwipeable } from "react-swipeable";
 import { DraftCard } from "./draft-card";
 import type { Slot, SlotReveal } from "@/lib/types";
 
@@ -25,26 +24,18 @@ export function DraftCards({
   const [activeIndex, setActiveIndex] = useState(0);
   const [selectedSlot, setSelectedSlot] = useState<Slot | null>(null);
 
-  const handlers = useSwipeable({
-    onSwipedLeft: () =>
-      setActiveIndex((prev) => Math.min(prev + 1, SLOTS.length - 1)),
-    onSwipedRight: () => setActiveIndex((prev) => Math.max(prev - 1, 0)),
-    trackMouse: true,
-  });
-
   async function handleSelect(slot: Slot) {
     setSelectedSlot(slot);
 
-    // Find the model ID for this slot from reveal data
     const revealData = reveal.find((r) => r.slot === slot);
     if (draftId && revealData) {
-      // Map display name back to provider ID
       const modelMap: Record<string, string> = {
         "GPT-4o": "openai",
         "Claude Sonnet 4.5": "anthropic",
         "Gemini 2.5 Flash": "google",
       };
-      const selectedModel = modelMap[revealData.modelName] ?? revealData.modelName;
+      const selectedModel =
+        modelMap[revealData.modelName] ?? revealData.modelName;
 
       await fetch(`/api/drafts/${draftId}`, {
         method: "PATCH",
@@ -56,36 +47,36 @@ export function DraftCards({
     onReveal();
   }
 
+  const activeSlot = SLOTS[activeIndex];
+
   return (
-    <div {...handlers} className="w-full overflow-hidden">
-      <div
-        className="flex transition-transform duration-300 ease-out"
-        style={{ transform: `translateX(-${activeIndex * 100}%)` }}
-      >
-        {SLOTS.map((slot) => (
-          <DraftCard
+    <div className="w-full">
+      {/* Tab buttons */}
+      <div className="flex gap-2 mb-4">
+        {SLOTS.map((slot, i) => (
+          <button
             key={slot}
-            label={labels[slot] || ""}
-            text={texts[slot]}
-            modelName={reveal.find((r) => r.slot === slot)?.modelName}
-            onSelect={() => handleSelect(slot)}
-            isRevealed={selectedSlot !== null}
-          />
+            onClick={() => setActiveIndex(i)}
+            className={`flex-1 py-2 text-sm font-medium tracking-wide uppercase rounded-lg transition-colors ${
+              i === activeIndex
+                ? "bg-accent/15 text-accent border border-accent/30"
+                : "bg-surface text-muted border border-white/5"
+            }`}
+          >
+            {labels[slot] || `Draft ${["Alpha", "Beta", "Gamma"][i]}`}
+          </button>
         ))}
       </div>
 
-      {/* Dot indicators */}
-      <div className="flex justify-center gap-2 mt-6">
-        {SLOTS.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setActiveIndex(i)}
-            className={`w-2 h-2 rounded-full transition-colors ${
-              i === activeIndex ? "bg-accent" : "bg-white/20"
-            }`}
-          />
-        ))}
-      </div>
+      {/* Active card */}
+      <DraftCard
+        key={activeSlot}
+        label={labels[activeSlot] || ""}
+        text={texts[activeSlot]}
+        modelName={reveal.find((r) => r.slot === activeSlot)?.modelName}
+        onSelect={() => handleSelect(activeSlot)}
+        isRevealed={selectedSlot !== null}
+      />
     </div>
   );
 }

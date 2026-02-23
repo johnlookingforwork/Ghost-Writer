@@ -45,7 +45,7 @@ export function AuthForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-accent hover:bg-accent-dim disabled:opacity-50 transition-colors text-white font-medium py-3 rounded-lg"
+          className="w-full bg-accent hover:bg-accent-dim disabled:opacity-50 transition-colors text-background font-medium py-3 rounded-lg"
         >
           {loading ? "Sending..." : "Send Magic Link"}
         </button>

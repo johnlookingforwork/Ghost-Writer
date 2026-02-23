@@ -29,7 +29,7 @@ export function BrainDumpInput({ onSubmit, disabled }: BrainDumpInputProps) {
         <button
           type="submit"
           disabled={!text.trim() || disabled}
-          className="w-full bg-accent hover:bg-accent-dim disabled:opacity-30 disabled:cursor-not-allowed transition-colors text-white font-medium py-3 rounded-full text-sm tracking-wide uppercase"
+          className="w-full bg-accent hover:bg-accent-dim disabled:opacity-30 disabled:cursor-not-allowed transition-colors text-background font-medium py-3 rounded-full text-sm tracking-wide uppercase"
         >
           Transmit
         </button>

@@ -14,8 +14,8 @@ const config: Config = {
         foreground: "#e0e0e0",
         surface: "#0a0a0a",
         "surface-hover": "#141414",
-        accent: "#8b5cf6",
-        "accent-dim": "#6d28d9",
+        accent: "#d4c5a9",
+        "accent-dim": "#b8a88a",
         muted: "#a0a0a0",
       },
       fontFamily: {

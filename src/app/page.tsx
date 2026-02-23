@@ -11,7 +11,7 @@ export default function Home() {
         </p>
         <Link
           href="/dashboard"
-          className="inline-block bg-accent hover:bg-accent-dim transition-colors text-white font-medium px-8 py-3 rounded-full"
+          className="inline-block bg-accent hover:bg-accent-dim transition-colors text-background font-medium px-8 py-3 rounded-full"
         >
           Start Writing
         </Link>

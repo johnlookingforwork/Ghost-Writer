@@ -1,10 +1,51 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { BrainDumpInput } from "@/components/brain-dump-input";
 import { StreamingOverlay } from "@/components/streaming-overlay";
 import { DraftCards } from "@/components/draft-cards";
 import type { GenerateState, Slot, SlotReveal } from "@/lib/types";
+
+const STORAGE_KEY = "ghost-writer-session";
+
+interface SessionState {
+  state: GenerateState;
+  texts: Record<Slot, string>;
+  labels: Record<Slot, string>;
+  reveal: SlotReveal[];
+  draftId: string | null;
+}
+
+function saveSession(session: SessionState) {
+  try {
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(session));
+  } catch {
+    // Ignore storage errors
+  }
+}
+
+function loadSession(): SessionState | null {
+  try {
+    const stored = sessionStorage.getItem(STORAGE_KEY);
+    if (!stored) return null;
+    const session = JSON.parse(stored) as SessionState;
+    // Only restore if we were in reviewing state (had completed drafts)
+    if (session.state === "reviewing" || session.state === "revealed") {
+      return session;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+function clearSession() {
+  try {
+    sessionStorage.removeItem(STORAGE_KEY);
+  } catch {
+    // Ignore
+  }
+}
 
 export default function DashboardPage() {
   const [state, setState] = useState<GenerateState>("idle");
@@ -20,6 +61,28 @@ export default function DashboardPage() {
   });
   const [reveal, setReveal] = useState<SlotReveal[]>([]);
   const [draftId, setDraftId] = useState<string | null>(null);
+  const [restored, setRestored] = useState(false);
+
+  // Restore session on mount
+  useEffect(() => {
+    const session = loadSession();
+    if (session) {
+      setState(session.state);
+      setTexts(session.texts);
+      setLabels(session.labels);
+      setReveal(session.reveal);
+      setDraftId(session.draftId);
+    }
+    setRestored(true);
+  }, []);
+
+  // Persist session when in reviewing state
+  useEffect(() => {
+    if (!restored) return;
+    if (state === "reviewing" || state === "revealed") {
+      saveSession({ state, texts, labels, reveal, draftId });
+    }
+  }, [state, texts, labels, reveal, draftId, restored]);
 
   const generate = useCallback(async (rawInput: string) => {
     setState("streaming");
@@ -91,7 +154,11 @@ export default function DashboardPage() {
     setLabels({ a: "", b: "", c: "" });
     setReveal([]);
     setDraftId(null);
+    clearSession();
   }
+
+  // Don't render until we've checked for a saved session
+  if (!restored) return null;
 
   return (
     <div>

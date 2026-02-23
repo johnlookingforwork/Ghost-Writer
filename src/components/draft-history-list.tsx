@@ -5,6 +5,7 @@ import type { Draft } from "@/lib/types";
 
 interface DraftHistoryListProps {
   drafts: Draft[];
+  onDelete: (id: string) => void;
 }
 
 const MODEL_DISPLAY_NAMES: Record<string, string> = {
@@ -13,9 +14,10 @@ const MODEL_DISPLAY_NAMES: Record<string, string> = {
   google: "Gemini 2.5 Flash",
 };
 
-export function DraftHistoryList({ drafts }: DraftHistoryListProps) {
+export function DraftHistoryList({ drafts, onDelete }: DraftHistoryListProps) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState(0);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   if (drafts.length === 0) {
     return (
@@ -32,6 +34,16 @@ export function DraftHistoryList({ drafts }: DraftHistoryListProps) {
       { label: "B", modelName: draft.model_b_name, text: draft.model_b_text },
       { label: "C", modelName: draft.model_c_name, text: draft.model_c_text },
     ];
+  }
+
+  async function handleDelete(id: string) {
+    setDeletingId(id);
+    const res = await fetch(`/api/drafts/${id}`, { method: "DELETE" });
+    if (res.ok) {
+      onDelete(id);
+      if (expandedId === id) setExpandedId(null);
+    }
+    setDeletingId(null);
   }
 
   return (
@@ -111,6 +123,15 @@ export function DraftHistoryList({ drafts }: DraftHistoryListProps) {
                     )}
                   </p>
                 </div>
+
+                {/* Delete button */}
+                <button
+                  onClick={() => handleDelete(draft.id)}
+                  disabled={deletingId === draft.id}
+                  className="w-full text-red-400/70 hover:text-red-400 hover:bg-red-400/10 border border-red-400/20 disabled:opacity-50 transition-colors text-xs font-medium py-2 rounded-lg"
+                >
+                  {deletingId === draft.id ? "Deleting..." : "Delete entry"}
+                </button>
               </div>
             )}
           </div>

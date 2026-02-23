@@ -26,7 +26,10 @@ export default function HistoryPage() {
       {loading ? (
         <p className="text-muted text-center py-12">Loading...</p>
       ) : (
-        <DraftHistoryList drafts={drafts} />
+        <DraftHistoryList
+          drafts={drafts}
+          onDelete={(id) => setDrafts((prev) => prev.filter((d) => d.id !== id))}
+        />
       )}
     </div>
   );

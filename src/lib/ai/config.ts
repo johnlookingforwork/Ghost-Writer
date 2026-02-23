@@ -26,13 +26,13 @@ export const MODEL_CONFIGS = [
   },
   {
     id: "anthropic",
-    provider: anthropic("claude-3-5-sonnet-latest"),
-    displayName: "Claude 3.5 Sonnet",
+    provider: anthropic("claude-sonnet-4-5-20250929"),
+    displayName: "Claude Sonnet 4.5",
   },
   {
     id: "google",
-    provider: google("gemini-1.5-pro"),
-    displayName: "Gemini 1.5 Pro",
+    provider: google("gemini-2.5-flash"),
+    displayName: "Gemini 2.5 Flash",
   },
 ] as const;
 

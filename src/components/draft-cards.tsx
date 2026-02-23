@@ -41,8 +41,8 @@ export function DraftCards({
       // Map display name back to provider ID
       const modelMap: Record<string, string> = {
         "GPT-4o": "openai",
-        "Claude 3.5 Sonnet": "anthropic",
-        "Gemini 1.5 Pro": "google",
+        "Claude Sonnet 4.5": "anthropic",
+        "Gemini 2.5 Flash": "google",
       };
       const selectedModel = modelMap[revealData.modelName] ?? revealData.modelName;
 

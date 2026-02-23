@@ -8,8 +8,8 @@ interface DraftHistoryListProps {
 
 const MODEL_DISPLAY_NAMES: Record<string, string> = {
   openai: "GPT-4o",
-  anthropic: "Claude 3.5 Sonnet",
-  google: "Gemini 1.5 Pro",
+  anthropic: "Claude Sonnet 4.5",
+  google: "Gemini 2.5 Flash",
 };
 
 export function DraftHistoryList({ drafts }: DraftHistoryListProps) {

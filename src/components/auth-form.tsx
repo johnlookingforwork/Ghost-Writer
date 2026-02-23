@@ -22,15 +22,6 @@ export function AuthForm() {
     if (!error) setSent(true);
   }
 
-  async function handleGoogleLogin() {
-    await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
-  }
-
   if (sent) {
     return (
       <div className="text-center space-y-4">
@@ -59,22 +50,6 @@ export function AuthForm() {
           {loading ? "Sending..." : "Send Magic Link"}
         </button>
       </form>
-
-      <div className="relative">
-        <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-white/10" />
-        </div>
-        <div className="relative flex justify-center text-sm">
-          <span className="bg-background px-4 text-muted">or</span>
-        </div>
-      </div>
-
-      <button
-        onClick={handleGoogleLogin}
-        className="w-full bg-surface hover:bg-surface-hover border border-white/10 transition-colors text-foreground font-medium py-3 rounded-lg"
-      >
-        Sign in with Google
-      </button>
     </div>
   );
 }
